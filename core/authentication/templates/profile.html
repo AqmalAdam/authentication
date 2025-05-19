@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>My Profile - KPMG</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" />
+    <style>
+        body {
+            background-color: #f4f6f9;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-image: url('https://wallpaperaccess.com/full/15216631.jpg');
+        }
+        .profile-card {
+            background-color: #ffffff;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+        }
+        .profile-pic {
+            width: 120px;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 50%;
+            margin-bottom: 20px;
+        }
+        h3 {
+            color: #00338d;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+<div class="container mt-5">
+    <div class="col-md-6 mx-auto profile-card text-center">
+
+        <!-- Dynamic Profile Picture -->
+        {% if profile.profile_image %}
+          <img src="{{ profile.profile_image.url }}" alt="Profile Pic" class="profile-pic" />
+        {% else %}
+          <img src="https://www.w3schools.com/howto/img_avatar.png" alt="Default Profile Pic" class="profile-pic" />
+        {% endif %}
+
+        <!-- Profile Info -->
+        <h3>{{ user.first_name }} {{ user.last_name }}</h3>
+        <p class="text-muted">@{{ user.username }}</p>
+
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <div class="form-group text-left">
+                <label for="first_name">First Name</label>
+                <input type="text" id="first_name" name="first_name" class="form-control" value="{{ user.first_name }}" required />
+            </div>
+
+            <div class="form-group text-left">
+                <label for="last_name">Last Name</label>
+                <input type="text" id="last_name" name="last_name" class="form-control" value="{{ user.last_name }}" required />
+            </div>
+
+            <div class="form-group text-left">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" class="form-control" value="{{ user.email }}" required />
+            </div>
+
+            <div class="form-group text-left">
+                <label for="profile_pic">Profile Picture</label>
+                <input type="file" id="profile_pic" name="profile_pic" class="form-control-file" />
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block mt-3">Update Profile</button>
+        </form>
+    </div>
+</div>
+</body>
+</html>

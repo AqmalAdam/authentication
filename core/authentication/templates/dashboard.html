@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dashboard - KPMG</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background-color: #f5f7fa;
+      color: #333;
+    }
+
+    nav {
+      background-color: #002d72;
+      color: white;
+      padding: 12px 0;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    nav .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
+    }
+
+    nav .navbar-nav {
+      display: flex;
+      gap: 15px;
+    }
+
+    .nav-link {
+      padding: 10px 18px;
+      border: 2px solid transparent;
+      border-radius: 8px;
+      color: white;
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+
+    .nav-link:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+      border-color: #ffd700;
+    }
+
+    .logout-button {
+      padding: 10px 18px;
+      background-color: crimson;
+      border: none;
+      border-radius: 6px;
+      color: white;
+      font-weight: 600;
+      text-decoration: none;
+      transition: background 0.3s;
+    }
+
+    .logout-button:hover {
+      background-color: darkred;
+    }
+
+    .navbar-brand img {
+      height: 50px;
+    }
+
+    .container-main {
+      max-width: 1000px;
+      margin: 120px auto 40px;
+      padding: 0 20px;
+    }
+
+    h2 {
+      color: #002d72;
+      font-size: 28px;
+      margin-bottom: 16px;
+      border-bottom: 2px solid #ddd;
+      padding-bottom: 6px;
+    }
+
+    .section {
+      background-color: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+      padding: 30px;
+      margin-bottom: 40px;
+      animation: fadeInUp 0.5s ease-in-out;
+    }
+
+    p {
+      line-height: 1.6;
+      margin-bottom: 12px;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        transform: translateY(20px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    @media (max-width: 768px) {
+      nav .container {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      nav .navbar-nav {
+        flex-direction: column;
+        gap: 10px;
+        margin-top: 10px;
+      }
+
+      .container-main {
+        margin-top: 100px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <div class="container">
+      <a class="navbar-brand" href="#top">
+        <img src="https://assets.kpmg.com/is/image/kpmg/kpmg-logo-1" alt="KPMG Logo" />
+      </a>
+      <div class="navbar-nav">
+        <a class="nav-link" href="#About">About</a>
+        <a class="nav-link" href="#Address">Address</a>
+        <a class="nav-link" href="#Contactus">Contact Us</a>
+        <a class="nav-link" href="{% url 'profile' %}">My Profile</a>
+        <a href="{% url 'logout' %}" class="logout-button">Logout</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container-main">
+    {% if messages %}
+    <div id="message-alert" style="margin-bottom: 20px;">
+      {% for message in messages %}
+        <div style="background-color: #d4edda; color: #155724; border-radius: 8px; padding: 12px 20px; font-weight: 600; border: 1px solid #c3e6cb;">
+          {{ message }}
+        </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="section" id="About">
+      <h2>About</h2>
+      <p>KPMG in Malaysia traces its roots to 1928 and is part of a global network with a presence in 142 countries and over 275,000 professionals. With more than 2,300 staff across 8 offices in Malaysia, we bring deep industry knowledge and a collaborative approach to solving clients' challenges in Audit, Tax, and Advisory services.</p>
+      <p>We emphasize industry-specific insights, service excellence, and community impact through inclusive values and sustainable initiatives. Our leadership team is spearheaded by Managing Partner Foong Mun Kong, with strategic guidance from Non-Executive Chairman Datuk Johan Idris.</p>
+    </div>
+
+    <div class="section" id="Address">
+      <h2>Address</h2>
+      <p><strong>Petaling Jaya, Selangor:</strong><br> Level 10, KPMG Tower, 8, First Avenue, Bandar Utama, 47800 Petaling Jaya<br>Tel: +603-7721 3388 | Fax: +603-7721 3399</p>
+      <p><strong>Penang:</strong><br> Level 18, Hunza Tower, 163E Jalan Kelawei<br>Tel: +604-375 1800 | Fax: +60 4 2382 222</p>
+      <p><strong>Miri:</strong><br> Lot 2045, 1st & 2nd Floor, Marina Square, Marina Parkcity<br>Tel: +60 85-321 912 | Fax: +60 85-321 962</p>
+      <p><strong>Labuan:</strong><br> Lot 4, 2nd Floor Wisma Kishan Singh, Jalan Kemajuan<br>Tel: +60 87-415 467 | Fax: +60 87-414 781</p>
+      <p><strong>Kuching:</strong><br> Level 2, Lee Onn Building, Jalan Lapangan Terbang<br>Tel: +60 82-268 305 | Fax: +60 82-268 306</p>
+      <p><strong>Kota Kinabalu:</strong><br> Plaza Shell, 29 Jalan Tunku Abdul Rahman<br>Tel: +60 88-363 020 | Fax: +60 88-363 022</p>
+      <p><strong>Johor:</strong><br> CIMB Leadership Academy, Medini Iskandar<br>Tel: +607-266 2213 | Fax: +607-266 2214</p>
+      <p><strong>Ipoh:</strong><br> Level 17, Ipoh Tower, Jalan Dato’ Seri Ahmad Said<br>Tel: +605-253 1188</p>
+    </div>
+
+    <div class="section" id="Contactus">
+      <h2>Contact Us</h2>
+      <p><strong>Email:</strong> AQMALADAMGUSIARDI@kpmg.com.my</p>
+      <p><strong>Phone:</strong> 017-7104979</p>
+    </div>
+
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const alertBox = document.getElementById('message-alert');
+      if (alertBox) {
+        setTimeout(() => {
+          alertBox.style.transition = 'opacity 0.5s ease';
+          alertBox.style.opacity = '0';
+          setTimeout(() => alertBox.remove(), 500);
+        }, 10000); // 10 seconds
+      }
+    });
+  </script>
+  
+</body>
+</html>
