@@ -34,9 +34,23 @@
       align-items: center;
       justify-content: space-between;
       padding: 0 20px;
+      flex-wrap: wrap;
     }
 
-    nav .navbar-nav {
+    .navbar-brand img {
+      height: 50px;
+    }
+
+    .navbar-toggle {
+      display: none;
+      font-size: 26px;
+      background: none;
+      border: none;
+      color: white;
+      cursor: pointer;
+    }
+
+    .navbar-nav {
       display: flex;
       gap: 15px;
     }
@@ -68,10 +82,6 @@
 
     .logout-button:hover {
       background-color: darkred;
-    }
-
-    .navbar-brand img {
-      height: 50px;
     }
 
     .container-main {
@@ -114,15 +124,22 @@
     }
 
     @media (max-width: 768px) {
-      nav .container {
-        flex-direction: column;
-        align-items: flex-start;
+      .navbar-toggle {
+        display: block;
       }
 
-      nav .navbar-nav {
-        flex-direction: column;
-        gap: 10px;
-        margin-top: 10px;
+      .navbar-nav {
+    flex-direction: column;
+    width: 100%;
+    display: none;
+    gap: 10px;
+    margin-top: 10px;
+    align-items: center;
+    text-align: center;
+  }
+
+      .navbar-nav.active {
+        display: flex;
       }
 
       .container-main {
@@ -138,7 +155,8 @@
       <a class="navbar-brand" href="#top">
         <img src="https://assets.kpmg.com/is/image/kpmg/kpmg-logo-1" alt="KPMG Logo" />
       </a>
-      <div class="navbar-nav">
+      <button class="navbar-toggle" id="navbar-toggle">&#9776;</button>
+      <div class="navbar-nav" id="navbar-menu">
         <a class="nav-link" href="#About">About</a>
         <a class="nav-link" href="#Address">Address</a>
         <a class="nav-link" href="#Contactus">Contact Us</a>
@@ -182,21 +200,34 @@
       <p><strong>Email:</strong> AQMALADAMGUSIARDI@kpmg.com.my</p>
       <p><strong>Phone:</strong> 017-7104979</p>
     </div>
-
   </div>
 
   <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
       const alertBox = document.getElementById('message-alert');
       if (alertBox) {
         setTimeout(() => {
           alertBox.style.transition = 'opacity 0.5s ease';
           alertBox.style.opacity = '0';
           setTimeout(() => alertBox.remove(), 500);
-        }, 10000); // 10 seconds
+        }, 10000);
       }
+
+      const toggle = document.getElementById('navbar-toggle');
+      const menu = document.getElementById('navbar-menu');
+
+      toggle.addEventListener('click', () => {
+        menu.classList.toggle('active');
+      });
+
+      const navLinks = menu.querySelectorAll('a');
+      navLinks.forEach(link => {
+        link.addEventListener('click', () => {
+          menu.classList.remove('active');
+        });
+      });
     });
   </script>
-  
+
 </body>
 </html>
