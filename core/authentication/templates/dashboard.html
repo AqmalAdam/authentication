@@ -4,7 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Dashboard - KPMG</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet" />
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
   <style>
     * {
       box-sizing: border-box;
@@ -15,82 +16,93 @@
       font-family: 'Poppins', sans-serif;
       background-color: #f5f7fa;
       color: #333;
+      min-height: 100vh;
     }
 
-    nav {
+    .layout {
+      display: flex;
+      flex-direction: row;
+      min-height: 100vh;
+      position: relative;
+    }
+
+    .sidebar {
+      width: 250px;
       background-color: #002d72;
       color: white;
-      padding: 12px 0;
-      position: sticky;
+      position: fixed;
       top: 0;
-      z-index: 1000;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    }
-
-    nav .container {
-      max-width: 1200px;
-      margin: 0 auto;
+      left: 0;
+      height: 100vh;
+      padding: 20px 10px;
       display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 20px;
-      flex-wrap: wrap;
+      flex-direction: column;
+      z-index: 1100;
+      transition: transform 0.3s ease-in-out;
     }
 
-    .navbar-brand img {
+    .sidebar .brand {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .sidebar .brand img {
       height: 50px;
     }
 
-    .navbar-toggle {
-      display: none;
-      font-size: 26px;
-      background: none;
-      border: none;
-      color: white;
-      cursor: pointer;
-    }
-
-    .navbar-nav {
-      display: flex;
-      gap: 15px;
-    }
-
-    .nav-link {
-      padding: 10px 18px;
-      border: 2px solid transparent;
-      border-radius: 8px;
+    .sidebar a {
       color: white;
       text-decoration: none;
-      transition: all 0.3s ease;
+      padding: 12px 15px;
+      border-radius: 8px;
+      margin: 4px 0;
+      display: flex;
+      align-items: center;
+      transition: background 0.3s;
       font-size: 14px;
     }
 
-    .nav-link:hover {
+    .sidebar a i {
+      margin-right: 10px;
+    }
+
+    .sidebar a:hover {
       background-color: rgba(255, 255, 255, 0.1);
-      border-color: #ffd700;
     }
 
     .logout-button {
-      padding: 10px 18px;
       background-color: crimson;
-      border: none;
-      border-radius: 6px;
       color: white;
-      font-weight: 600;
+      text-align: center;
+      border-radius: 6px;
+      margin-top: auto;
+      padding: 10px;
       text-decoration: none;
-      transition: background 0.3s;
-      font-size: 14px;
+      font-weight: 600;
     }
 
     .logout-button:hover {
       background-color: darkred;
     }
 
+    .toggle-button {
+      display: none;
+      position: fixed;
+      top: 15px;
+      left: 15px;
+      font-size: 28px;
+      background: none;
+      color: #002d72;
+      border: none;
+      cursor: pointer;
+      z-index: 1200;
+    }
+
     .container-main {
-      max-width: 1000px;
-      margin: 120px auto 40px;
-      padding: 0 20px;
-      font-size: 14px;
+      margin-left: 270px;
+      padding: 30px;
+      flex: 1;
+      transition: margin-left 0.3s ease;
     }
 
     h2 {
@@ -113,19 +125,7 @@
     p {
       line-height: 1.6;
       margin-bottom: 12px;
-      word-wrap: break-word;
-      overflow-wrap: break-word;
       font-size: 14px;
-    }
-
-    .section a {
-      color: #002d72;
-      text-decoration: none;
-      font-weight: 500;
-    }
-
-    .section a:hover {
-      text-decoration: underline;
     }
 
     @keyframes fadeInUp {
@@ -139,117 +139,121 @@
       }
     }
 
+    /* MOBILE STYLES */
     @media (max-width: 768px) {
-      .navbar-toggle {
+      .layout {
+        flex-direction: column;
+      }
+
+      .toggle-button {
         display: block;
       }
 
-      .navbar-nav {
-        flex-direction: column;
-        width: 100%;
-        display: none;
-        gap: 10px;
-        margin-top: 10px;
-        align-items: center;
-        text-align: center;
+      .sidebar {
+        transform: translateX(-100%);
+        width: 220px;
+        box-shadow: 2px 0 8px rgba(0, 0, 0, 0.2);
       }
 
-      .navbar-nav.active {
-        display: flex;
+      .sidebar.active {
+        transform: translateX(0);
       }
 
       .container-main {
-        margin-top: 100px;
+        margin-left: 0 !important;
+        padding: 20px;
+      }
+
+      /* overlay background when sidebar open */
+      .layout.sidebar-open::before {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(0, 0, 0, 0.3);
+        z-index: 1050;
       }
     }
   </style>
 </head>
 <body>
+  <button class="toggle-button" id="toggle-btn" aria-label="Toggle sidebar"><i class="fas fa-bars"></i></button>
 
-  <nav>
-    <div class="container">
-      <a class="navbar-brand" href="#top">
+  <div class="layout" id="layout">
+    <nav class="sidebar" id="sidebar" aria-label="Sidebar navigation">
+      <div class="brand">
         <img src="https://assets.kpmg.com/is/image/kpmg/kpmg-logo-1" alt="KPMG Logo" />
-      </a>
-      <button class="navbar-toggle" id="navbar-toggle">&#9776;</button>
-      <div class="navbar-nav" id="navbar-menu">
-        <a class="nav-link" href="#About">About</a>
-        <a class="nav-link" href="#Address">Address</a>
-        <a class="nav-link" href="#Contactus">Contact Us</a>
-        <a class="nav-link" href="{% url 'profile' %}">My Profile</a>
-        <a href="{% url 'logout' %}" class="logout-button">Logout</a>
       </div>
-    </div>
-  </nav>
+      <a href="#About"><i class="fas fa-info-circle"></i> About</a>
+      <a href="#Address"><i class="fas fa-map-marker-alt"></i> Address</a>
+      <a href="#Contactus"><i class="fas fa-envelope"></i> Contact Us</a>
+      <a href="{% url 'profile' %}"><i class="fas fa-user"></i> My Profile</a>
+      <a href="{% url 'logout' %}" class="logout-button">Logout</a>
+    </nav>
 
-  <div class="container-main">
-    {% if messages %}
-    <div id="message-alert" style="margin-bottom: 20px;">
-      {% for message in messages %}
-        <div style="background-color: #d4edda; color: #155724; border-radius: 8px; padding: 12px 20px; font-weight: 600; border: 1px solid #c3e6cb;">
-          {{ message }}
-        </div>
-      {% endfor %}
-    </div>
-    {% endif %}
+    <main class="container-main" id="main-content" tabindex="-1">
+      {% if messages %}
+      <div id="message-alert" style="margin-bottom: 20px;">
+        {% for message in messages %}
+          <div style="background-color: #d4edda; color: #155724; border-radius: 8px; padding: 12px 20px; font-weight: 600; border: 1px solid #c3e6cb;">
+            {{ message }}
+          </div>
+        {% endfor %}
+      </div>
+      {% endif %}
 
-    <div class="section" id="About">
-      <h2>About</h2>
-      <p>KPMG in Malaysia traces its roots to 1928 and is part of a global network with a presence in 142 countries and over 275,000 professionals. With more than 2,300 staff across 8 offices in Malaysia, we bring deep industry knowledge and a collaborative approach to solving clients' challenges in Audit, Tax, and Advisory services.</p>
-      <p>We emphasize industry-specific insights, service excellence, and community impact through inclusive values and sustainable initiatives. Our leadership team is spearheaded by Managing Partner Foong Mun Kong, with strategic guidance from Non-Executive Chairman Datuk Johan Idris.</p>
-    </div>
+      <section class="section" id="About">
+        <h2>About</h2>
+        <p>KPMG in Malaysia traces its roots to 1928 and is part of a global network with a presence in 142 countries and over 275,000 professionals. With more than 2,300 staff across 8 offices in Malaysia, we bring deep industry knowledge and a collaborative approach to solving clients' challenges in Audit, Tax, and Advisory services.</p>
+        <p>We emphasize industry-specific insights, service excellence, and community impact through inclusive values and sustainable initiatives. Our leadership team is spearheaded by Managing Partner Foong Mun Kong, with strategic guidance from Non-Executive Chairman Datuk Johan Idris.</p>
+      </section>
 
-    <div class="section" id="Address">
-      <h2>Address</h2>
-      <p><strong>Petaling Jaya, Selangor:</strong><br> Level 10, KPMG Tower, 8, First Avenue, Bandar Utama, 47800 Petaling Jaya<br>Tel: +603-7721 3388 | Fax: +603-7721 3399</p>
-      <p><strong>Penang:</strong><br> Level 18, Hunza Tower, 163E Jalan Kelawei<br>Tel: +604-375 1800 | Fax: +60 4 2382 222</p>
-      <p><strong>Miri:</strong><br> Lot 2045, 1st & 2nd Floor, Marina Square, Marina Parkcity<br>Tel: +60 85-321 912 | Fax: +60 85-321 962</p>
-      <p><strong>Labuan:</strong><br> Lot 4, 2nd Floor Wisma Kishan Singh, Jalan Kemajuan<br>Tel: +60 87-415 467 | Fax: +60 87-414 781</p>
-      <p><strong>Kuching:</strong><br> Level 2, Lee Onn Building, Jalan Lapangan Terbang<br>Tel: +60 82-268 305 | Fax: +60 82-268 306</p>
-      <p><strong>Kota Kinabalu:</strong><br> Plaza Shell, 29 Jalan Tunku Abdul Rahman<br>Tel: +60 88-363 020 | Fax: +60 88-363 022</p>
-      <p><strong>Johor:</strong><br> CIMB Leadership Academy, Medini Iskandar<br>Tel: +607-266 2213 | Fax: +607-266 2214</p>
-      <p><strong>Ipoh:</strong><br> Level 17, Ipoh Tower, Jalan Dato’ Seri Ahmad Said<br>Tel: +605-253 1188</p>
-    </div>
+      <section class="section" id="Address">
+        <h2>Address</h2>
+        <p><strong>Petaling Jaya, Selangor:</strong><br> Level 10, KPMG Tower, 8, First Avenue, Bandar Utama, 47800 Petaling Jaya<br>Tel: +603-7721 3388 | Fax: +603-7721 3399</p>
+        <p><strong>Penang:</strong><br> Level 18, Hunza Tower, 163E Jalan Kelawei<br>Tel: +604-375 1800 | Fax: +60 4 2382 222</p>
+        <p><strong>Miri:</strong><br> Lot 2045, 1st & 2nd Floor, Marina Square, Marina Parkcity<br>Tel: +60 85-321 912 | Fax: +60 85-321 962</p>
+        <p><strong>Labuan:</strong><br> Lot 4, 2nd Floor Wisma Kishan Singh, Jalan Kemajuan<br>Tel: +60 87-415 467 | Fax: +60 87-414 781</p>
+        <p><strong>Kuching:</strong><br> Level 2, Lee Onn Building, Jalan Lapangan Terbang<br>Tel: +60 82-268 305 | Fax: +60 82-268 306</p>
+        <p><strong>Kota Kinabalu:</strong><br> Plaza Shell, 29 Jalan Tunku Abdul Rahman<br>Tel: +60 88-363 020 | Fax: +60 88-363 022</p>
+        <p><strong>Johor:</strong><br> CIMB Leadership Academy, Medini Iskandar<br>Tel: +607-266 2213 | Fax: +607-266 2214</p>
+        <p><strong>Ipoh:</strong><br> Level 17, Ipoh Tower, Jalan Dato’ Seri Ahmad Said<br>Tel: +605-253 1188</p>
+      </section>
 
-    <div class="section" id="Contactus">
-      <h2>Contact Us</h2>
-      <p><strong>Email:</strong>
-        <a href="mailto:AQMALADAMGUSIARDI@kpmg.com.my">
-          AQMALADAMGUSIARDI@kpmg.com.my
-        </a>
-      </p>
-      <p><strong>Phone:</strong>
-        <a href="tel:0177104979">017-7104979</a>
-      </p>
-    </div>
+      <section class="section" id="Contactus">
+        <h2>Contact Us</h2>
+        <p><strong>Email:</strong> <a href="mailto:AQMALADAMGUSIARDI@kpmg.com.my">AQMALADAMGUSIARDI@kpmg.com.my</a></p>
+        <p><strong>Phone:</strong> <a href="tel:0177104979">017-7104979</a></p>
+      </section>
+    </main>
   </div>
 
   <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      const alertBox = document.getElementById('message-alert');
-      if (alertBox) {
-        setTimeout(() => {
-          alertBox.style.transition = 'opacity 0.5s ease';
-          alertBox.style.opacity = '0';
-          setTimeout(() => alertBox.remove(), 500);
-        }, 10000);
-      }
+    const toggleBtn = document.getElementById('toggle-btn');
+    const sidebar = document.getElementById('sidebar');
+    const layout = document.getElementById('layout');
 
-      const toggle = document.getElementById('navbar-toggle');
-      const menu = document.getElementById('navbar-menu');
-
-      toggle.addEventListener('click', () => {
-        menu.classList.toggle('active');
-      });
-
-      const navLinks = menu.querySelectorAll('a');
-      navLinks.forEach(link => {
-        link.addEventListener('click', () => {
-          menu.classList.remove('active');
-        });
-      });
+    toggleBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      sidebar.classList.toggle('active');
+      layout.classList.toggle('sidebar-open');
     });
-  </script>
 
+    // Close sidebar when clicking outside sidebar or toggle button
+    document.addEventListener('click', (e) => {
+      if (
+        !sidebar.contains(e.target) &&
+        !toggleBtn.contains(e.target) &&
+        sidebar.classList.contains('active')
+      ) {
+        sidebar.classList.remove('active');
+        layout.classList.remove('sidebar-open');
+      }
+    });
+
+    // Accessibility: trap focus inside sidebar when open (optional enhancement)
+  </script>
 </body>
 </html>
